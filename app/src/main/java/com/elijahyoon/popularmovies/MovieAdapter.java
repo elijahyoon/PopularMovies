@@ -22,6 +22,8 @@ import java.util.List;
 public class MovieAdapter extends ArrayAdapter<Movie> {
 
     private static final String LOG_TAG = MovieAdapter.class.getSimpleName();
+    private String POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
+    private String POSTER_SIZE = "w185";
 
     public MovieAdapter(Activity context, List<Movie> movies) {
         super(context, 0, movies);
@@ -41,8 +43,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         }
 
         viewHolder.movieTitle.setText(movie.getTitle());
-        Log.d(LOG_TAG,"Attaching image " + movie.getPoster());
-        Picasso.with(getContext()).load("http://i.imgur.com/DvpvklR.png").into(viewHolder.moviePoster);
+        Picasso.with(getContext()).load(POSTER_BASE_URL+POSTER_SIZE+movie.getPoster()).into(viewHolder.moviePoster);
 
         return convertView;
     }
