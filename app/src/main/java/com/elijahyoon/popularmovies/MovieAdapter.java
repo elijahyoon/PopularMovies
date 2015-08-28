@@ -23,7 +23,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
 
     private static final String LOG_TAG = MovieAdapter.class.getSimpleName();
     private String POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
-    private String POSTER_SIZE = "w185";
+    private String POSTER_SIZE = "w342";
 
     public MovieAdapter(Activity context, List<Movie> movies) {
         super(context, 0, movies);

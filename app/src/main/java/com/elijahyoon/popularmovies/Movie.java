@@ -7,6 +7,7 @@ public class Movie {
 
     private String title;
     private String posterURL;
+    private int rating;
 
     public Movie(String title, String poster) {
         this.title = title;

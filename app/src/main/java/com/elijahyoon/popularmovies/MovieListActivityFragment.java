@@ -105,10 +105,13 @@ public class MovieListActivityFragment extends Fragment {
 
         @Override
         protected List<Movie> doInBackground(String... params) {
-            // If there's no number of movies, there's nothing to look up.  Verify size of params.
-//            if (params.length == 0) {
-//                return null;
-//            }
+            String sortBy = "popularity.desc";
+            String apiKey = "";
+
+            // Sort by something else
+            if (params.length > 0) {
+                sortBy = params[0];
+            }
 
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
@@ -117,9 +120,6 @@ public class MovieListActivityFragment extends Fragment {
 
             // Will contain the raw JSON response as a string.
             String movieData = null;
-
-            String sortBy = "popularity.desc";
-            String apiKey = "54f4839b0cef7a6fa700896299766302";
 
             try {
                 // Construct the URL for the movie db query
@@ -166,7 +166,7 @@ public class MovieListActivityFragment extends Fragment {
 
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
-                // If the code didn't successfully get the weather data, there's no point in attemping
+                // If the code didn't successfully get the movie data, there's no point in attemping
                 // to parse it.
                 return null;
             } finally {
@@ -196,7 +196,7 @@ public class MovieListActivityFragment extends Fragment {
         private List<Movie> getMoviesFromJson(String movieData)  throws JSONException {
 
             // These are the names of the JSON objects that need to be extracted.
-            final String BACKDROP = "backdrop_path";
+            final String BACKDROP = "poster_path";
             final String TITLE = "title";
             final String RESULTS = "results";
 
