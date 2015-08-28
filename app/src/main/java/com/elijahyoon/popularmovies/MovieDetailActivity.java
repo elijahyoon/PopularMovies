@@ -52,7 +52,7 @@ public class MovieDetailActivity extends ActionBarActivity {
     public static class MovieDetailFragment extends Fragment {
 
         private static final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
-
+        private static final String MOVIE_KEY = "movie";
         private Movie movie;
 
         public MovieDetailFragment() {
@@ -67,11 +67,15 @@ public class MovieDetailActivity extends ActionBarActivity {
 
             Intent intent = getActivity().getIntent();
             if (intent != null && intent.hasExtra("movie")) {
+                if(savedInstanceState != null && savedInstanceState.containsKey(MOVIE_KEY)) {
+                    movie = savedInstanceState.getParcelable(MOVIE_KEY);
+                } else {
+                    movie = intent.getParcelableExtra("movie");
+                }
                 String POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
                 String POSTER_SIZE = "w780";
-                movie = intent.getParcelableExtra("movie");
                 ((TextView) rootView.findViewById(R.id.details_title)).setText(movie.getTitle());
-                Picasso.with(getActivity()).
+                Picasso.with(getActivity()). //TODO: implement save instance for poster
                         load(POSTER_BASE_URL+POSTER_SIZE+movie.getPoster()).
                         error(R.drawable.camera).
                         into((ImageView) rootView.findViewById(R.id.poster_image));
@@ -81,6 +85,12 @@ public class MovieDetailActivity extends ActionBarActivity {
             }
 
             return rootView;
+        }
+
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+            super.onSaveInstanceState(outState );
+            outState.putParcelable(MOVIE_KEY, movie);
         }
     }
 }

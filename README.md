@@ -1,3 +1,3 @@
 #READ ME
 ##APIKEY
-API key variable is located in the MovieListActivityFragment.java file at line 111.
+API key variable is located in the FetchMoviesTask.java file at line 44.
