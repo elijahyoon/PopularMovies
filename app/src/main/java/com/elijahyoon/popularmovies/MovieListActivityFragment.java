@@ -1,12 +1,12 @@
 package com.elijahyoon.popularmovies;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -37,6 +37,7 @@ import java.util.List;
 public class MovieListActivityFragment extends Fragment {
 
     private ArrayAdapter<Movie> mAdapter;
+    private SharedPreferences pref;
 
     public MovieListActivityFragment() {
     }
@@ -55,7 +56,7 @@ public class MovieListActivityFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Movie movie = mAdapter.getItem(position);
-                Intent detailsIntent = new Intent(getActivity(), MovieDetailActivity.class).putExtra(Intent.EXTRA_TEXT, movie.getTitle());
+                Intent detailsIntent = new Intent(getActivity(), MovieDetailActivity.class).putExtra("movie", movie);
                 startActivity(detailsIntent);
             }
         });
@@ -67,6 +68,7 @@ public class MovieListActivityFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
     }
 
     @Override
@@ -77,7 +79,7 @@ public class MovieListActivityFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_move_fragment, menu);
+        inflater.inflate(R.menu.menu_movie_fragment, menu);
     }
 
     @Override
@@ -105,13 +107,8 @@ public class MovieListActivityFragment extends Fragment {
 
         @Override
         protected List<Movie> doInBackground(String... params) {
-            String sortBy = "popularity.desc";
+            String sortBy = pref.getString(getString(R.string.pref_sort_key), getString(R.string.pref_sort_popularity));
             String apiKey = "";
-
-            // Sort by something else
-            if (params.length > 0) {
-                sortBy = params[0];
-            }
 
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
@@ -199,6 +196,9 @@ public class MovieListActivityFragment extends Fragment {
             final String BACKDROP = "poster_path";
             final String TITLE = "title";
             final String RESULTS = "results";
+            final String VOTE = "vote_average";
+            final String RELEASE_DATE = "release_date";
+            final String PLOT = "overview";
 
             JSONObject movieJSON = new JSONObject(movieData);
             JSONArray movieArray = movieJSON.getJSONArray(RESULTS);
@@ -210,8 +210,8 @@ public class MovieListActivityFragment extends Fragment {
                 JSONObject currentMovie = movieArray.getJSONObject(i);
 
                 //Create movie object
-                Log.d(LOG_TAG, currentMovie.getString(TITLE)+", "+currentMovie.getString(BACKDROP));
-                Movie movieObject = new Movie(currentMovie.getString(TITLE), currentMovie.getString(BACKDROP));
+                Movie movieObject = new Movie(currentMovie.getString(TITLE), currentMovie.getString(BACKDROP),
+                        currentMovie.getString(VOTE), currentMovie.getString(RELEASE_DATE), currentMovie.getString(PLOT));
 
                 resultMovies.add(movieObject);
             }

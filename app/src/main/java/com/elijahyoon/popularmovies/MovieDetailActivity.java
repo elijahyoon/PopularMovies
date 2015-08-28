@@ -13,7 +13,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by elijahyoon on 8/25/15.
@@ -33,14 +36,10 @@ public class MovieDetailActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            //startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, MovieSettingsActivity.class));
             return true;
         }
 
@@ -54,7 +53,7 @@ public class MovieDetailActivity extends ActionBarActivity {
 
         private static final String LOG_TAG = MovieDetailFragment.class.getSimpleName();
 
-        private String movieName;
+        private Movie movie;
 
         public MovieDetailFragment() {
             setHasOptionsMenu(true);
@@ -66,12 +65,19 @@ public class MovieDetailActivity extends ActionBarActivity {
 
             View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
 
-            ShareActionProvider shareActionProvider = new ShareActionProvider(getActivity());
-
             Intent intent = getActivity().getIntent();
-            if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-                movieName = intent.getStringExtra(Intent.EXTRA_TEXT);
-                ((TextView) rootView.findViewById(R.id.details_text)).setText(movieName);
+            if (intent != null && intent.hasExtra("movie")) {
+                String POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
+                String POSTER_SIZE = "w780";
+                movie = intent.getParcelableExtra("movie");
+                ((TextView) rootView.findViewById(R.id.details_title)).setText(movie.getTitle());
+                Picasso.with(getActivity()).
+                        load(POSTER_BASE_URL+POSTER_SIZE+movie.getPoster()).
+                        error(R.drawable.camera).
+                        into((ImageView) rootView.findViewById(R.id.poster_image));
+                ((TextView) rootView.findViewById(R.id.body_plot_synopsis)).setText(movie.getPlot());
+                ((TextView) rootView.findViewById(R.id.body_release_date)).setText(movie.getReleaseDate());
+                ((TextView) rootView.findViewById(R.id.body_rating)).setText(movie.getVote());
             }
 
             return rootView;

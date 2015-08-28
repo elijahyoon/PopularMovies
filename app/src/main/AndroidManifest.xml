@@ -26,6 +26,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.elijahyoon.popularmovies.MovieListActivity" />
         </activity>
+        <activity
+            android:name=".MovieSettingsActivity"
+            android:label="@string/title_activity_movie_settings"
+            android:parentActivityName=".MovieSettingsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.elijahyoon.popularmovies.MovieListActivity" />
+        </activity>
     </application>
 
 </manifest>

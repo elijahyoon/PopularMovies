@@ -29,10 +29,12 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         super(context, 0, movies);
     }
 
+    //Override to return custom view
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Movie movie = getItem(position);
 
+        //implement view holder pattern to reduce unnecessary findViewById calls
         ViewHolder viewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.grid_item_movie, parent, false);
@@ -42,8 +44,12 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
+        //Set text and image views (title and poster)
         viewHolder.movieTitle.setText(movie.getTitle());
-        Picasso.with(getContext()).load(POSTER_BASE_URL+POSTER_SIZE+movie.getPoster()).into(viewHolder.moviePoster);
+        Picasso.with(getContext()).
+                load(POSTER_BASE_URL+POSTER_SIZE+movie.getPoster()).
+                error(R.drawable.camera).
+                into(viewHolder.moviePoster);
 
         return convertView;
     }
